@@ -1,0 +1,28 @@
+body{
+    text-align:center;
+}
+
+table{
+    border-collapse: collapse;
+    margin:0 auto;
+}
+
+td,th{
+    width:100px;
+    height:50px;
+    border:solid black 1px;
+}
+
+th {
+    text-decoration: underline;
+}
+
+td{
+    background:lightgreen;
+}
+
+.alreadyBooked{
+    pointer-events: none;
+    background:red;
+    color:white;
+}
