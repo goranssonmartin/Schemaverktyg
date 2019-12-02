@@ -9,6 +9,12 @@
 
 <body>
 
+
+    <div id="explanation">
+        <div id="orange">Bokade av dig</div>
+        <div id="red">Bokade av andra</div>
+        <div id="blue">De du vill boka</div>
+    </div>
     <form onsubmit="createAccount()">
         <input type="email" placeholder="E-mail" id="email" name="email">
         <input type="password" placeholder="Password" id="password" name="password">
@@ -24,9 +30,10 @@
     <br>
     <button onclick="logOut()">Log Out</button>
     <br>
-    <br>
     <p id="loginStatus"></p>
     <p id="numberOfBookings"></p>
+    <br>
+    <br>
     <table>
 
         <tr>
@@ -114,7 +121,6 @@
     <br>
     <button onclick="commitBookings()">Boka</button>
     <br>
-
 </body>
 
 </html>

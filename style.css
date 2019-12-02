@@ -1,28 +1,60 @@
-body{
-    text-align:center;
+body {
+    text-align: center;
 }
 
-table{
+table {
     border-collapse: collapse;
-    margin:0 auto;
+    margin: 0 auto;
 }
 
-td,th{
-    width:100px;
-    height:50px;
-    border:solid black 1px;
+td, th {
+    width: 100px;
+    height: 50px;
+    border: solid black 1px;
 }
 
 th {
     text-decoration: underline;
 }
 
-td{
-    background:lightgreen;
+td {
+    background: lightgreen;
 }
 
-.alreadyBooked{
+.alreadyBooked {
     pointer-events: none;
-    background:red;
+    background: red;
+    color: white;
+}
+
+.currentUserBooked{
+    background:orange;
+    pointer-events: none;
+}
+
+.tempSelected{
+    background-color:blue;
     color:white;
+}
+
+#blue{
+    background:blue;
+    color:white;
+    width:100px;
+    height:100px;
+}
+#red{
+    background:red;
+    width:100px;
+    height:100px;
+}
+#orange{
+    background:orange;
+    width:100px;
+    height:100px;
+}
+#explanation{
+    left:5px;
+    top:5px;
+    position:absolute;
 }

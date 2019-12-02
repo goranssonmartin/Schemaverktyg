@@ -7,11 +7,10 @@ $(document).ready(function () {
     markedBooking = [];
     $("td").click(function () {
         if (sessionStorage.getItem("loggedIn") !== null) {
-            if (markedBooking.length < 5 && checkTotalBookingsForUser(currentUser) < 5) {
-                $(this).css("background-color", "blue");
-            }
             var col = $(this).parent().children().index($(this));
-            bookTime($(this).text(), $("th").eq(col + 1).text());
+            if (bookTime($(this).text(), $("th").eq(col + 1).text()) === true) {
+                $(this).toggleClass("tempSelected");
+            }
         }
     });
 
@@ -24,12 +23,13 @@ $(document).ready(function () {
     }
 
     if (sessionStorage.getItem("loggedIn") !== null) {
-        $("#loginStatus").text("Inloggad som: " + sessionStorage.getItem("loggedIn"));
+        $("#loginStatus").text("Inloggad som: " + currentUser);
+        $("#numberOfBookings").css("display", "inline");
         $("#numberOfBookings").text("Antal bokningar: " + checkTotalBookingsForUser(currentUser) + " av 5");
     }
     else {
         $("#loginStatus").text("Inte inloggad");
-
+        $("#numberOfBookings").css("display", "none");
         $("#numberOfBookings").text("");
     }
     makeBookedTimesInactive();
@@ -84,11 +84,17 @@ function bookTime(cellText, cellColumn) {
         booked: true,
         bookedBy: currentUser
     }
-    if (markedBooking.length < 5 && containsObject(JSON.stringify(schema), markedBooking) === false && checkTotalBookingsForUser(currentUser) < 6) {
+    if (markedBooking.length < 5 && containsObject(JSON.stringify(schema), markedBooking) === false && checkTotalBookingsForUser(currentUser) < 5) {
         markedBooking.push(schema);
+        return true;
+    }
+    else if (containsObject(JSON.stringify(schema), markedBooking) === true) {
+        console.log("removed");
+        return true;
     }
     else {
         alert("Too many bookings");
+        return false;
     }
 }
 
@@ -114,6 +120,8 @@ function containsObject(schema, markedBooking) {
     var i;
     for (i = 0; i < markedBooking.length; i++) {
         if (JSON.stringify(markedBooking[i]) === schema) {
+            markedBooking.splice(i, 1);
+            i == markedBooking.length;
             return true;
         }
     }
@@ -127,13 +135,18 @@ function commitBookings() {
     else {
         allBookings = JSON.parse(localStorage.getItem("storedBookings"));
     }
+    var currentUser = sessionStorage.getItem("loggedIn");
 
-    markedBooking.forEach(element => {
-        allBookings.push(element);
-    });
+    if (checkTotalBookingsForUser(currentUser) < 6) {
+        markedBooking.forEach(element => {
+            allBookings.push(element);
+        });
 
-    localStorage.setItem("storedBookings", JSON.stringify(allBookings));
-    location.reload();
+        localStorage.setItem("storedBookings", JSON.stringify(allBookings));
+        location.reload();
+    }
+    else {
+    }
 }
 
 function makeBookedTimesInactive() {
@@ -143,6 +156,7 @@ function makeBookedTimesInactive() {
     else {
         allBookings = JSON.parse(localStorage.getItem("storedBookings"));
     }
+    var currentUser=sessionStorage.getItem("loggedIn");
 
     $("td").each(function () {
         var textValue = $(this).text();
@@ -150,8 +164,11 @@ function makeBookedTimesInactive() {
         var colText = $("th").eq(col + 1).text();
 
         allBookings.forEach(element => {
-            if (element.time === textValue && element.day === colText) {
+            if (element.time === textValue && element.day === colText && element.bookedBy!==currentUser) {
                 $(this).addClass("alreadyBooked");
+            }
+            else if (element.time === textValue && element.day === colText && element.bookedBy===currentUser){
+                $(this).addClass("currentUserBooked");
             }
         });
     });
