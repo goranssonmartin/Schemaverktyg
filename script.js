@@ -92,6 +92,13 @@ function bookTime(cellText, cellColumn) {
         return true;
     }
     else if (containsObject(JSON.stringify(schema), markedBooking) === true) {
+        var i;
+        for (i = 0; i < markedBooking.length; i++) {
+            if (JSON.stringify(markedBooking[i]) === JSON.stringify(schema)) {
+                markedBooking.splice(i, 1);
+               i == markedBooking.length;
+            }
+        }
         console.log("removed");
         return true;
     }
@@ -123,8 +130,6 @@ function containsObject(schema, markedBooking) {
     var i;
     for (i = 0; i < markedBooking.length; i++) {
         if (JSON.stringify(markedBooking[i]) === schema) {
-            markedBooking.splice(i, 1);
-            i == markedBooking.length;
             return true;
         }
     }
