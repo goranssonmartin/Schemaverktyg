@@ -5,6 +5,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
+    <title>Schemaverktyg</title>
 </head>
 
 <body>
@@ -18,16 +19,16 @@
     <form onsubmit="createAccount()">
         <input type="email" placeholder="E-mail" id="email" name="email">
         <input type="password" placeholder="Password" id="password" name="password">
-        <input type="submit" value="Create Account" id="createAccount">
+        <input type="submit" value="Create Account" id="createAccountBtn">
     </form>
-    <br>
+    <br id="topBr">
 
     <form onsubmit="login()">
         <input type="email" placeholder="E-mail" id="emailLogin" name="emailLogin">
         <input type="password" placeholder="Password" id="passwordLogin" name="passwordLogin">
         <input type="submit" value="Login" id="loginBtn">
     </form>
-    <br>
+    <br id="logOutBr">
     <button onclick="logOut()">Log Out</button>
     <br>
     <p id="loginStatus"></p>
@@ -120,10 +121,21 @@
             </tr>
         </table>
         <br>
+        <button onclick="previousWeek()"><<</button>
         <button onclick="commitBookings()">Boka</button>
+        <button onclick="nextWeek()">>></button>
     </div>
 
-    <div id="modal"></div>
+    <div id="modal">
+        <div id="modalContent">
+            <button id="closeModal" onclick="closeModal()">Stäng</button>
+            <br>
+            <p id="bookedBy"></p>
+            <p id="time"></p>
+            <p id="day"></p>
+            <p id="weekModal"></p>
+        </div>
+    </div>
     <br>
 </body>
 

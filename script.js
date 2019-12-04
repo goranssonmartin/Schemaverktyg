@@ -2,28 +2,33 @@ var userData;
 var bookings;
 var markedBooking;
 var allBookings;
+var tdToChange;
 $(document).ready(function () {
     var currentUser = sessionStorage.getItem("loggedIn");
     markedBooking = [];
     $("td").click(function () {
-        if($(this).attr("class")==="alreadyBooked"){
-            var currentId=$(this).attr("id");
-            displayModal(currentId);
+        if ($(this).attr("class") === "alreadyBooked") {
+            var currentId = $(this).attr("id");
+            var yourBooking = false;
+            displayModal(currentId, yourBooking);
         }
 
-        else if($(this).attr("class")==="currentUserBooked"){
-            var currentId=$(this).attr("id");
-            displayModal(currentId);
+        else if ($(this).attr("class") === "currentUserBooked") {
+            var currentId = $(this).attr("id");
+            var yourBooking = true;
+            displayModal(currentId, yourBooking);
+            tdToChange = currentId;
+            $(this).css("background", "pink");
         }
 
-        else{
-        if (sessionStorage.getItem("loggedIn") !== null) {
-            var col = $(this).parent().children().index($(this));
-            if (bookTime($(this).text(), $("th").eq(col + 1).text()) === true) {
-                $(this).toggleClass("tempSelected");
+        else {
+            if (sessionStorage.getItem("loggedIn") !== null) {
+                var col = $(this).parent().children().index($(this));
+                if (bookTime($(this).text(), $("th").eq(col + 1).text()) === true) {
+                    $(this).toggleClass("tempSelected");
+                }
             }
         }
-    }
     });
 
 
@@ -38,12 +43,14 @@ $(document).ready(function () {
         $("#loginStatus").text("Inloggad som: " + currentUser);
         $("#numberOfBookings").css("display", "inline");
         $("#numberOfBookings").text("Antal bokningar: " + checkTotalBookingsForUser(currentUser) + " av 5");
-        $("#email").css("display","none");
-        $("#password").css("display","none");
-        $("#createAccount").css("display","none");
-        $("#emailLogin").css("display","none");
-        $("#passwordLogin").css("display","none");
-        $("#loginBtn").css("display","none");
+        $("#email").css("display", "none");
+        $("#password").css("display", "none");
+        $("#createAccountBtn").css("display", "none");
+        $("#emailLogin").css("display", "none");
+        $("#passwordLogin").css("display", "none");
+        $("#loginBtn").css("display", "none");
+        $("#topBr").css("display", "none");
+        $("#logOutBr").css("display", "none");
     }
     else {
         $("#loginStatus").text("Inte inloggad");
@@ -53,40 +60,80 @@ $(document).ready(function () {
     makeBookedTimesInactive();
 });
 
-function displayModal(currentId){
+function createAccount() {
+    if ($("#email").val() !== "" && $("#password").val() !== "") {
+        var data = {
+            email: $("#email").val(),
+            password: $("#password").val()
+        }
+
+        if ((userData.findIndex(i => i.email === $("#email").val()) == -1)) {
+            userData.push(data);
+            localStorage.setItem("storedUserData", JSON.stringify(userData));
+        }
+        else {
+            alert("User already exist");
+        }
+    }
+    else {
+        alert("Skriv in något");
+    }
+}
+
+function displayModal(currentId, yourBooking) {
     if (localStorage.getItem("storedBookings") === null) {
         allBookings = [];
     }
     else {
         allBookings = JSON.parse(localStorage.getItem("storedBookings"));
     }
-    console.log(allBookings[currentId].bookedBy);
+
+    $("#bookedBy").text("Bokad av: " + allBookings[currentId].bookedBy);
+    $("#time").text("Tid för bokning: " + allBookings[currentId].time);
+    $("#day").text("Dag för bokning: " + allBookings[currentId].day);
+    $("#weekModal").text("Vecka för Bokning: " + allBookings[currentId].week);
+
+    if (yourBooking) {
+
+        if (!document.getElementById("modal").contains(document.getElementById("removeBookingButton"))) {
+            var unbookButton = document.createElement("button");
+            unbookButton.onclick = removeBooking;
+            unbookButton.innerText = "Avboka";
+            unbookButton.id = "removeBookingButton";
+            $("#modalContent").append(unbookButton);
+        }
+        $("#modal").css("display", "block");
+    }
+    else {
+        var button = $("#removeBookingButton");
+        button.remove();
+        $("#modal").css("display", "block");
+    }
 }
 
+function removeBooking() {
+    if (localStorage.getItem("storedBookings") === null) {
+        allBookings = [];
+    }
+    else {
+        allBookings = JSON.parse(localStorage.getItem("storedBookings"));
+    }
+    allBookings.splice(tdToChange, 1);
+    localStorage.setItem("storedBookings", JSON.stringify(allBookings));
+    tdToChange = null;
+    location.reload();
+}
+
+function closeModal() {
+    location.reload();
+}
 
 function logOut() {
     sessionStorage.clear();
     location.reload();
 }
 
-function createAccount() {
-    var data = {
-        email: $("#email").val(),
-        password: $("#password").val()
-    }
 
-    if ((userData.findIndex(i => i.email === $("#email").val()) == -1) && sessionStorage.getItem("currentlyLoggedIn") !== "true") {
-        userData.push(data);
-        localStorage.setItem("storedUserData", JSON.stringify(userData));
-        console.log(userData);
-    }
-    else if (sessionStorage.getItem("currentlyLoggedIn") === "true") {
-        alert("Can not create new account while logged in.")
-    }
-    else {
-        alert("User already exist");
-    }
-}
 
 function login() {
     if (userData.findIndex(i => i.email === $("#emailLogin").val()) != -1) {
@@ -112,7 +159,6 @@ function bookTime(cellText, cellColumn) {
         week: currentWeek,
         day: cellColumn,
         time: cellText,
-        booked: true,
         bookedBy: currentUser
     }
     if ((markedBooking.length < 5) && (containsObject(JSON.stringify(schema), markedBooking) === false) && (checkTotalBookingsForUser(currentUser) < 5) && ((markedBooking.length + checkTotalBookingsForUser(currentUser) < 5))) {
@@ -164,6 +210,31 @@ function containsObject(schema, markedBooking) {
     return false;
 }
 
+function nextWeek() {
+    var week = $("#week").text();
+    if (week++ < 53) {
+        $("#week").text(week);
+    }
+    else {
+        week = 1;
+        $("#week").text(week);
+    }
+    makeBookedTimesInactive();
+}
+
+function previousWeek() {
+
+    var week = $("#week").text();
+    if (week-- > 1) {
+        $("#week").text(week);
+    }
+    else {
+        week = 53;
+        $("#week").text(week);
+    }
+    makeBookedTimesInactive();
+}
+
 function commitBookings() {
     if (localStorage.getItem("storedBookings") === null) {
         allBookings = [];
@@ -193,6 +264,7 @@ function makeBookedTimesInactive() {
         allBookings = JSON.parse(localStorage.getItem("storedBookings"));
     }
     var currentUser = sessionStorage.getItem("loggedIn");
+    var currentWeek = $("#week").text();
 
     $("td").each(function () {
         var currentTDElement = $(this);
@@ -200,13 +272,16 @@ function makeBookedTimesInactive() {
         var col = $(this).parent().children().index($(this));
         var colText = $("th").eq(col + 1).text();
 
+        currentTDElement.removeClass();
+        currentTDElement.removeAttr("id");
+
         allBookings.forEach(function (value, i) {
-            if (value.time === textValue && value.day === colText && value.bookedBy !== currentUser) {
+            if (value.time === textValue && value.day === colText && value.bookedBy !== currentUser && value.week === currentWeek) {
                 currentTDElement.addClass("alreadyBooked");
                 currentTDElement.attr("id", i);
 
             }
-            else if (value.time === textValue && value.day === colText && value.bookedBy === currentUser) {
+            else if (value.time === textValue && value.day === colText && value.bookedBy === currentUser && value.week === currentWeek) {
                 currentTDElement.addClass("currentUserBooked");
                 currentTDElement.attr("id", i);
             }
