@@ -47,35 +47,28 @@ td {
     /* Sit on top */
     left: 0;
     top: 0;
-    width: 100%;
-    /* Full width */
-    height: 100%;
-    /* Full height */
-    overflow: auto;
-    /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0);
-    /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
-}
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
 
-#modalContent {
+  #modalContent {
     background-color: #fefefe;
-    margin: 15% auto;
-    /* 15% from the top and centered */
+    margin: 15% auto; /* 15% from the top and centered */
     padding-bottom: 20px;
     border: 1px solid #888;
     text-align: center;
-    font-family: "Comic Sans Ms";
-    width: 80%;
-    /* Could be more or less, depending on screen size */
-}
+    font-family:"Comic Sans Ms";
+    width: 80%; /* Could be more or less, depending on screen size */
+  }
 
-#closeModal {
-    float: right;
-    margin-top: 2px;
-    margin-right: 2px;
-}
+  #closeModal{
+      float:right;
+      margin-top:2px;
+      margin-right:2px;
+  }
 
 .alreadyBooked {
     background: red;
@@ -92,36 +85,29 @@ td {
     background: orange;
 }
 
-.tempSelected {
-    background-color: blue;
-    color: white;
+.tempSelected{
+    background-color:blue;
+    color:white;
 }
 
-#yearAndWeek p{
-    display:inline;
+#blue{
+    background:blue;
+    color:white;
+    width:100px;
+    height:100px;
 }
-
-#blue {
-    background: blue;
-    color: white;
-    width: 100px;
-    height: 100px;
+#red{
+    background:red;
+    width:100px;
+    height:100px;
 }
-
-#red {
-    background: red;
-    width: 100px;
-    height: 100px;
+#orange{
+    background:orange;
+    width:100px;
+    height:100px;
 }
-
-#orange {
-    background: orange;
-    width: 100px;
-    height: 100px;
-}
-
-#explanation {
-    left: 5px;
-    top: 5px;
-    position: absolute;
+#explanation{
+    left:5px;
+    top:5px;
+    position:absolute;
 }
