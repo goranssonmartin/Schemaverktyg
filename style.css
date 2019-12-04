@@ -1,5 +1,19 @@
 body {
     text-align: center;
+    font-family:"comic sans ms";
+    animation: enTill 4s infinite;
+}
+
+@keyframes enTill{
+    0%{
+        background:green;
+    }
+    50%{
+        background:grey;
+    }
+    100%{
+        background:green;
+    }
 }
 
 table {
@@ -15,11 +29,14 @@ td, th {
 
 th {
     text-decoration: underline;
+    animation: lul 4s infinite;
 }
 
 td {
     background: lightgreen;
 }
+
+
 
 #modal {
     display: none;
@@ -63,6 +80,12 @@ td {
 .alreadyBooked {
     background: red;
     color: white;
+}
+
+@keyframes lul{
+    0%{background:pink;}
+    50%{background:blue;}
+    100%{background:pink;}
 }
 
 .currentUserBooked {
