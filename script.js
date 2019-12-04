@@ -124,7 +124,11 @@ function bookTime(cellText, cellColumn) {
         for (i = 0; i < markedBooking.length; i++) {
             if (JSON.stringify(markedBooking[i]) === JSON.stringify(schema)) {
                 markedBooking.splice(i, 1);
+<<<<<<< HEAD
                 i == markedBooking.length;
+=======
+               i == markedBooking.length;
+>>>>>>> 48d8e1bebd94eed10c9a55449569abc4da7f2d60
             }
         }
         console.log("removed");
@@ -192,7 +196,11 @@ function makeBookedTimesInactive() {
     else {
         allBookings = JSON.parse(localStorage.getItem("storedBookings"));
     }
+<<<<<<< HEAD
     var currentUser = sessionStorage.getItem("loggedIn");
+=======
+    var currentUser=sessionStorage.getItem("loggedIn");
+>>>>>>> 48d8e1bebd94eed10c9a55449569abc4da7f2d60
 
     $("td").each(function () {
         var currentTDElement = $(this);
@@ -200,6 +208,7 @@ function makeBookedTimesInactive() {
         var col = $(this).parent().children().index($(this));
         var colText = $("th").eq(col + 1).text();
 
+<<<<<<< HEAD
         allBookings.forEach(function (value, i) {
             if (value.time === textValue && value.day === colText && value.bookedBy !== currentUser) {
                 currentTDElement.addClass("alreadyBooked");
@@ -209,6 +218,14 @@ function makeBookedTimesInactive() {
             else if (value.time === textValue && value.day === colText && value.bookedBy === currentUser) {
                 currentTDElement.addClass("currentUserBooked");
                 currentTDElement.attr("id", i);
+=======
+        allBookings.forEach(element => {
+            if (element.time === textValue && element.day === colText && element.bookedBy!==currentUser) {
+                $(this).addClass("alreadyBooked");
+>>>>>>> 48d8e1bebd94eed10c9a55449569abc4da7f2d60
+            }
+            else if (element.time === textValue && element.day === colText && element.bookedBy===currentUser){
+                $(this).addClass("currentUserBooked");
             }
         });
     });
