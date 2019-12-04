@@ -1,24 +1,25 @@
 body {
     text-align: center;
     font-family:"comic sans ms";
-    animation: enTill 4s infinite;
+    animation: bodyAnimation 4s infinite;  
 }
 
-@keyframes enTill{
+@keyframes bodyAnimation{
     0%{
-        background:green;
+        background:lightblue;
     }
     50%{
-        background:grey;
+        background:lightgrey;
     }
     100%{
-        background:green;
+        background:lightblue;
     }
 }
 
 table {
     border-collapse: collapse;
     margin: 0 auto;
+    margin-bottom:10px;
 }
 
 td, th {
@@ -29,7 +30,7 @@ td, th {
 
 th {
     text-decoration: underline;
-    animation: lul 4s infinite;
+    animation: thAnimation 4s infinite;
 }
 
 td {
@@ -79,9 +80,9 @@ th p{
     color: white;
 }
 
-@keyframes lul{
+@keyframes thAnimation{
     0%{background:pink;}
-    50%{background:blue;}
+    50%{background:lightgoldenrodyellow;}
     100%{background:pink;}
 }
 

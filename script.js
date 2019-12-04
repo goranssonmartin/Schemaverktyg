@@ -6,7 +6,9 @@ var tdToChange;
 $(document).ready(function () {
     var currentUser = sessionStorage.getItem("loggedIn");
     markedBooking = [];
+
     $("td").click(function () {
+        var col = $(this).parent().children().index($(this));
         if ($(this).attr("class") === "alreadyBooked") {
             var currentId = $(this).attr("id");
             var yourBooking = false;
@@ -26,8 +28,9 @@ $(document).ready(function () {
         }
 
         else {
-            if (sessionStorage.getItem("loggedIn") !== null) {
-                var col = $(this).parent().children().index($(this));
+            console.log($("th").eq(col + 1).text());
+            console.log($(this).text());
+            if (sessionStorage.getItem("loggedIn") !== null && unableToBookInThePast($("th").eq(col + 1).text(), $(this).text()) === true) {
                 if (bookTime($(this).text(), $("th").eq(col + 1).text()) === true) {
                     $(this).toggleClass("tempSelected");
                 }
@@ -167,7 +170,7 @@ function setExpiredBookingsToTrue() {
     var currentDate = new Date();
     var currentYear = currentDate.getFullYear();
     var currentDay = currentDate.getDay();
-    var currentWeek;
+    var currentWeek = getCurrentWeek(currentDate, currentMonth);
     var currentTime = currentDate.getHours();
     var storedDay;
     var storedYear;
@@ -176,6 +179,44 @@ function setExpiredBookingsToTrue() {
 
     var currentMonth = currentDate.getMonth();
 
+
+    allBookings.forEach(element => {
+        storedYear = element.year;
+        storedWeek = element.week;
+        storedTime = element.time;
+        var compareStoredTime = "";
+        for (var i = 0; i < storedTime.length; i++) {
+            if (storedTime[i] !== "0" && storedTime[i] !== ":") {
+                compareStoredTime = compareStoredTime + storedTime[i];
+            }
+        }
+        var newCompareStoredTime = parseInt(compareStoredTime);
+        switch (element.day) {
+            case "Måndag":
+                storedDay = 1;
+                break;
+            case "Tisdag":
+                storedDay = 2;
+                break;
+            case "Onsdag":
+                storedDay = 3;
+                break;
+            case "Torsdag":
+                storedDay = 4;
+                break;
+            case "Fredag":
+                storedDay = 5;
+                break;
+        }
+        if (storedDay <= currentDay && storedYear <= currentYear && storedWeek <= currentWeek && newCompareStoredTime <= currentTime) {
+            element.expiredBooking = true;
+            localStorage.setItem("storedBookings", JSON.stringify(allBookings));
+        }
+    });
+}
+
+function getCurrentWeek(currentDate, currentMonth) {
+    var currentWeek;
     switch (currentMonth) {
 
         case 0:
@@ -215,44 +256,55 @@ function setExpiredBookingsToTrue() {
             currentWeek = (currentDate.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + 30) / 7;
             break;
     }
+    return Math.ceil(currentWeek);
+}
 
-    currentWeek = Math.ceil(currentWeek);
-    allBookings.forEach(element => {
-        storedYear = element.year;
-        storedWeek = element.week;
-        storedTime = element.time;
-        var compareStoredTime = "";
-        for (var i = 0; i < storedTime.length; i++) {
-            if (storedTime[i] !== "0" && storedTime[i] !== ":") {
-                compareStoredTime = compareStoredTime + storedTime[i];
-            }
-        }
-        var newCompareStoredTime = parseInt(compareStoredTime);
-        switch (element.day) {
-            case "Måndag":
-                storedDay = 1;
-                break;
-            case "Tisdag":
-                storedDay = 2;
-                break;
-            case "Onsdag":
-                storedDay = 3;
-                break;
-            case "Torsdag":
-                storedDay = 4;
-                break;
-            case "Fredag":
-                storedDay = 5;
-                break;
-        }
-        if (storedDay <= currentDay && storedYear <= currentYear && storedWeek <= currentWeek && newCompareStoredTime <= currentTime) {
-            element.expiredBooking = true;
-            localStorage.setItem("storedBookings", JSON.stringify(allBookings));
-        }
-    });
+function unableToBookInThePast(thisDay, thisTime) {
+    var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    var currentDay = currentDate.getDay();
+    var currentMonth = currentDate.getMonth();
+    var currentWeek = getCurrentWeek(currentDate, currentMonth);
+    var currentTime = currentDate.getHours();
+    
+    var thisWeek = $("#week").text();
+    var thisYear = $("#year").text();
 
+    var compareThisTime = "";
+    for (var i = 0; i < thisTime.length; i++) {
+        if (thisTime[i] !== "0" && thisTime[i] !== ":") {
+            compareThisTime = compareThisTime + thisTime[i];
+        }
+    }
+    var newCompareThisTime = parseInt(compareThisTime);
+    switch (thisDay) {
+        case "Måndag":
+            thisDay = 1;
+            break;
+        case "Tisdag":
+            thisDay = 2;
+            break;
+        case "Onsdag":
+            thisDay = 3;
+            break;
+        case "Torsdag":
+            thisDay = 4;
+            break;
+        case "Fredag":
+            thisDay = 5;
+            break;
+    }
+
+    if (thisDay <= currentDay && thisYear <= currentYear && thisWeek <= currentWeek && newCompareThisTime < currentTime) {
+        return false;
+    }
+
+    else {
+        return true;
+    }
 
 }
+
 
 function bookTime(cellTime, colDay) {
     var currentWeek = $("#week").text();
