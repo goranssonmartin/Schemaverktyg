@@ -10,15 +10,19 @@ $(document).ready(function () {
         if ($(this).attr("class") === "alreadyBooked") {
             var currentId = $(this).attr("id");
             var yourBooking = false;
-            displayModal(currentId, yourBooking);
+            if(markedBooking.length === 0){
+                displayModal(currentId, yourBooking);
+            }
         }
 
         else if ($(this).attr("class") === "currentUserBooked") {
             var currentId = $(this).attr("id");
             var yourBooking = true;
-            displayModal(currentId, yourBooking);
-            tdToChange = currentId;
-            $(this).css("background", "pink");
+            if(markedBooking.length === 0){
+                displayModal(currentId, yourBooking);
+                tdToChange = currentId;
+                $(this).css("background", "pink");
+            }
         }
 
         else {
@@ -87,7 +91,6 @@ function displayModal(currentId, yourBooking) {
     else {
         allBookings = JSON.parse(localStorage.getItem("storedBookings"));
     }
-
     $("#bookedBy").text("Bokad av: " + allBookings[currentId].bookedBy);
     $("#time").text("Tid för bokning: " + allBookings[currentId].time);
     $("#day").text("Dag för bokning: " + allBookings[currentId].day);
