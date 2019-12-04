@@ -10,7 +10,7 @@ $(document).ready(function () {
         if ($(this).attr("class") === "alreadyBooked") {
             var currentId = $(this).attr("id");
             var yourBooking = false;
-            if (markedBooking.length === 0) {
+            if(markedBooking.length === 0){
                 displayModal(currentId, yourBooking);
             }
         }
@@ -18,7 +18,7 @@ $(document).ready(function () {
         else if ($(this).attr("class") === "currentUserBooked") {
             var currentId = $(this).attr("id");
             var yourBooking = true;
-            if (markedBooking.length === 0) {
+            if(markedBooking.length === 0){
                 displayModal(currentId, yourBooking);
                 tdToChange = currentId;
                 $(this).css("background", "pink");
@@ -400,51 +400,4 @@ function makeBookedTimesInactive() {
             }
         });
     });
-}
-function currentWeek() {
-    var cDay = new Date();
-    var currentMonth = cDay.getMonth();
-    var currentWeek;
-
-    switch (currentMonth) {
-
-        case 0:
-            currentWeek = cDay.getDate() / 7;
-            break;
-        case 1:
-            currentWeek = (cDay.getDate() + 31) / 7;
-            break;
-        case 2:
-            currentWeek = (cDay.getDate() + 31 + 28) / 7;
-            break;
-        case 3:
-            currentWeek = (cDay.getDate() + 31 + 28 + 31) / 7;
-            break;
-        case 4:
-            currentWeek = (cDay.getDate() + 31 + 28 + 31 + 30) / 7;
-            break;
-        case 5:
-            currentWeek = (cDay.getDate() + 31 + 28 + 31 + 30 + 31) / 7;
-            break;
-        case 6:
-            currentWeek = (cDay.getDate() + 31 + 28 + 31 + 30 + 31 + 30) / 7;
-            break;
-        case 7:
-            currentWeek = (cDay.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31) / 7;
-            break;
-        case 8:
-            currentWeek = (cDay.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31) / 7;
-            break;
-        case 9:
-            currentWeek = (cDay.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30) / 7;
-            break;
-        case 10:
-            currentWeek = (cDay.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31) / 7;
-            break;
-        case 11:
-            currentWeek = (cDay.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + 30) / 7;
-            break;
-
-
-    }
 }
