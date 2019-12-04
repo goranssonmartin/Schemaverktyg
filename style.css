@@ -21,23 +21,14 @@ td {
     background: lightgreen;
 }
 
-<<<<<<< HEAD
 
 .alreadyBooked {
-=======
-.alreadyBooked {
-    pointer-events: none;
->>>>>>> 48d8e1bebd94eed10c9a55449569abc4da7f2d60
     background: red;
     color: white;
 }
 
 .currentUserBooked{
     background:orange;
-<<<<<<< HEAD
-=======
-    pointer-events: none;
->>>>>>> 48d8e1bebd94eed10c9a55449569abc4da7f2d60
 }
 
 .tempSelected{
