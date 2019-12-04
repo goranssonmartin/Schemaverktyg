@@ -19,17 +19,17 @@
     <form onsubmit="createAccount()">
         <input type="email" placeholder="E-mail" id="email" name="email">
         <input type="password" placeholder="Password" id="password" name="password">
-        <input type="submit" value="Create Account" id="createAccountBtn">
+        <input type="submit" value="Skapa konto" id="createAccountBtn">
     </form>
     <br id="topBr">
 
     <form onsubmit="login()">
         <input type="email" placeholder="E-mail" id="emailLogin" name="emailLogin">
         <input type="password" placeholder="Password" id="passwordLogin" name="passwordLogin">
-        <input type="submit" value="Login" id="loginBtn">
+        <input type="submit" value="Logga in" id="loginBtn">
     </form>
     <br id="logOutBr">
-    <button onclick="logOut()">Log Out</button>
+    <button onclick="logOut()" id="logOutBtn">Logga ut</button>
     <br>
     <p id="loginStatus"></p>
     <p id="numberOfBookings"></p>
@@ -39,14 +39,15 @@
         <table>
 
             <tr>
-                <th id="week" colspan="5">49</th>
+                <th colspan="5" id="yearAndWeek">Vecka: <p id="week">49</p> || År: <p id="year">2019</p>
+                </th>
             </tr>
             <tr>
-                <th>Monday</th>
-                <th>Tuesday</th>
-                <th>Wednesday</th>
-                <th>Thursday</th>
-                <th>Friday</th>
+                <th>Måndag</th>
+                <th>Tisdag</th>
+                <th>Onsdag</th>
+                <th>Torsdag</th>
+                <th>Fredag</th>
             </tr>
             <tr>
                 <td>08:00</td>
@@ -121,8 +122,9 @@
             </tr>
         </table>
         <br>
-        <button onclick="previousWeek()"><<</button>
-        <button onclick="commitBookings()">Boka</button>
+        <button onclick="previousWeek()">
+            <<</button> <button onclick="commitBookings()">Boka
+        </button>
         <button onclick="nextWeek()">>></button>
     </div>
 
