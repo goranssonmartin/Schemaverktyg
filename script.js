@@ -47,12 +47,14 @@ function createAccount() {
         password: $("#password").val()
     }
 
-    if (userData.findIndex(i => i.email === $("#email").val()) == -1) {
+    if ((userData.findIndex(i => i.email === $("#email").val()) == -1) && sessionStorage.getItem("currentlyLoggedIn") !== "true") {
         userData.push(data);
         localStorage.setItem("storedUserData", JSON.stringify(userData));
         console.log(userData);
     }
-
+    else if (sessionStorage.getItem("currentlyLoggedIn") === "true") {
+        alert("Can not create new account while logged in.")
+    }
     else {
         alert("User already exist");
     }
@@ -63,6 +65,7 @@ function login() {
         var currentIndex = userData.findIndex(i => i.email === $("#emailLogin").val());
         if (userData[currentIndex].password === $("#passwordLogin").val()) {
             sessionStorage.setItem("loggedIn", userData[currentIndex].email);
+            sessionStorage.setItem("currentlyLoggedIn", "true");
             location.reload();
         }
         else {
@@ -84,11 +87,18 @@ function bookTime(cellText, cellColumn) {
         booked: true,
         bookedBy: currentUser
     }
-    if (markedBooking.length < 5 && containsObject(JSON.stringify(schema), markedBooking) === false && checkTotalBookingsForUser(currentUser) < 5) {
+    if ((markedBooking.length < 5) && (containsObject(JSON.stringify(schema), markedBooking) === false) && (checkTotalBookingsForUser(currentUser) < 5) && ((markedBooking.length + checkTotalBookingsForUser(currentUser) < 5))) {
         markedBooking.push(schema);
         return true;
     }
     else if (containsObject(JSON.stringify(schema), markedBooking) === true) {
+        var i;
+        for (i = 0; i < markedBooking.length; i++) {
+            if (JSON.stringify(markedBooking[i]) === JSON.stringify(schema)) {
+                markedBooking.splice(i, 1);
+               i == markedBooking.length;
+            }
+        }
         console.log("removed");
         return true;
     }
@@ -120,8 +130,6 @@ function containsObject(schema, markedBooking) {
     var i;
     for (i = 0; i < markedBooking.length; i++) {
         if (JSON.stringify(markedBooking[i]) === schema) {
-            markedBooking.splice(i, 1);
-            i == markedBooking.length;
             return true;
         }
     }
