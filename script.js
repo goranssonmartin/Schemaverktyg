@@ -60,7 +60,9 @@ $(document).ready(function () {
         $("#loginStatus").text("Inte inloggad");
         $("#numberOfBookings").css("display", "none");
         $("#numberOfBookings").text("");
+        $("#logOutBtn").css("display", "none");
     }
+    setExpiredBookingsToTrue();
     makeBookedTimesInactive();
 });
 
@@ -76,7 +78,7 @@ function createAccount() {
             localStorage.setItem("storedUserData", JSON.stringify(userData));
         }
         else {
-            alert("User already exist");
+            alert("Det finns redan en användare med den mailadressen");
         }
     }
     else {
@@ -97,8 +99,7 @@ function displayModal(currentId, yourBooking) {
     $("#weekModal").text("Vecka för Bokning: " + allBookings[currentId].week);
 
     if (yourBooking) {
-
-        if (!document.getElementById("modal").contains(document.getElementById("removeBookingButton"))) {
+        if (!document.getElementById("modal").contains(document.getElementById("removeBookingButton")) && allBookings[currentId].expiredBooking === false) {
             var unbookButton = document.createElement("button");
             unbookButton.onclick = removeBooking;
             unbookButton.innerText = "Avboka";
@@ -155,14 +156,115 @@ function login() {
     }
 }
 
-function bookTime(cellText, cellColumn) {
+
+function setExpiredBookingsToTrue() {
+    if (localStorage.getItem("storedBookings") === null) {
+        allBookings = [];
+    }
+    else {
+        allBookings = JSON.parse(localStorage.getItem("storedBookings"));
+    }
+    var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    var currentDay = currentDate.getDay();
+    var currentWeek;
+    var currentTime = currentDate.getHours();
+    var storedDay;
+    var storedYear;
+    var storedWeek;
+    var storedTime;
+
+    var currentMonth = currentDate.getMonth();
+
+    switch (currentMonth) {
+
+        case 0:
+            currentWeek = currentDate.getDate() / 7;
+            break;
+        case 1:
+            currentWeek = (currentDate.getDate() + 31) / 7;
+            break;
+        case 2:
+            currentWeek = (currentDate.getDate() + 31 + 28) / 7;
+            break;
+        case 3:
+            currentWeek = (currentDate.getDate() + 31 + 28 + 31) / 7;
+            break;
+        case 4:
+            currentWeek = (currentDate.getDate() + 31 + 28 + 31 + 30) / 7;
+            break;
+        case 5:
+            currentWeek = (currentDate.getDate() + 31 + 28 + 31 + 30 + 31) / 7;
+            break;
+        case 6:
+            currentWeek = (currentDate.getDate() + 31 + 28 + 31 + 30 + 31 + 30) / 7;
+            break;
+        case 7:
+            currentWeek = (currentDate.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31) / 7;
+            break;
+        case 8:
+            currentWeek = (currentDate.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31) / 7;
+            break;
+        case 9:
+            currentWeek = (currentDate.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30) / 7;
+            break;
+        case 10:
+            currentWeek = (currentDate.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31) / 7;
+            break;
+        case 11:
+            currentWeek = (currentDate.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + 30) / 7;
+            break;
+    }
+
+    currentWeek = Math.ceil(currentWeek);
+    allBookings.forEach(element => {
+        storedYear = element.year;
+        storedWeek = element.week;
+        storedTime = element.time;
+        var compareStoredTime = "";
+        for (var i = 0; i < storedTime.length; i++) {
+            if (storedTime[i] !== "0" && storedTime[i] !== ":") {
+                compareStoredTime = compareStoredTime + storedTime[i];
+            }
+        }
+        var newCompareStoredTime = parseInt(compareStoredTime);
+        switch (element.day) {
+            case "Måndag":
+                storedDay = 1;
+                break;
+            case "Tisdag":
+                storedDay = 2;
+                break;
+            case "Onsdag":
+                storedDay = 3;
+                break;
+            case "Torsdag":
+                storedDay = 4;
+                break;
+            case "Fredag":
+                storedDay = 5;
+                break;
+        }
+        if (storedDay <= currentDay && storedYear <= currentYear && storedWeek <= currentWeek && newCompareStoredTime <= currentTime) {
+            element.expiredBooking = true;
+            localStorage.setItem("storedBookings", JSON.stringify(allBookings));
+        }
+    });
+
+
+}
+
+function bookTime(cellTime, colDay) {
     var currentWeek = $("#week").text();
+    var currentYear = $("#year").text();
     var currentUser = sessionStorage.getItem("loggedIn");
     var schema = {
         week: currentWeek,
-        day: cellColumn,
-        time: cellText,
-        bookedBy: currentUser
+        day: colDay,
+        time: cellTime,
+        year: currentYear,
+        bookedBy: currentUser,
+        expiredBooking: false
     }
     if ((markedBooking.length < 5) && (containsObject(JSON.stringify(schema), markedBooking) === false) && (checkTotalBookingsForUser(currentUser) < 5) && ((markedBooking.length + checkTotalBookingsForUser(currentUser) < 5))) {
         markedBooking.push(schema);
@@ -176,11 +278,11 @@ function bookTime(cellText, cellColumn) {
                 i == markedBooking.length;
             }
         }
-        console.log("removed");
+        console.log("Markerad bokning borttagen");
         return true;
     }
     else {
-        alert("Too many bookings");
+        alert("För många bokningar");
         return false;
     }
 }
@@ -196,7 +298,7 @@ function checkTotalBookingsForUser(currentUser) {
     var bookings = 0;
 
     allBookings.forEach(element => {
-        if (element.bookedBy === currentUser) {
+        if (element.bookedBy === currentUser && element.expiredBooking !== true) {
             bookings++;
         }
     });
@@ -214,26 +316,33 @@ function containsObject(schema, markedBooking) {
 }
 
 function nextWeek() {
+    markedBooking = [];
     var week = $("#week").text();
+    var year = $("#year").text();
     if (week++ < 53) {
         $("#week").text(week);
     }
     else {
         week = 1;
+        year++;
         $("#week").text(week);
+        $("#year").text(year);
     }
     makeBookedTimesInactive();
 }
 
 function previousWeek() {
-
+    markedBooking = [];
     var week = $("#week").text();
+    var year = $("#year").text();
     if (week-- > 1) {
         $("#week").text(week);
     }
     else {
         week = 53;
+        year--;
         $("#week").text(week);
+        $("#year").text(year);
     }
     makeBookedTimesInactive();
 }
@@ -268,6 +377,7 @@ function makeBookedTimesInactive() {
     }
     var currentUser = sessionStorage.getItem("loggedIn");
     var currentWeek = $("#week").text();
+    var currentYear = $("#year").text();
 
     $("td").each(function () {
         var currentTDElement = $(this);
@@ -279,12 +389,12 @@ function makeBookedTimesInactive() {
         currentTDElement.removeAttr("id");
 
         allBookings.forEach(function (value, i) {
-            if (value.time === textValue && value.day === colText && value.bookedBy !== currentUser && value.week === currentWeek) {
+            if (value.time === textValue && value.day === colText && value.bookedBy !== currentUser && value.week === currentWeek && value.year === currentYear) {
                 currentTDElement.addClass("alreadyBooked");
                 currentTDElement.attr("id", i);
 
             }
-            else if (value.time === textValue && value.day === colText && value.bookedBy === currentUser && value.week === currentWeek) {
+            else if (value.time === textValue && value.day === colText && value.bookedBy === currentUser && value.week === currentWeek && value.year === currentYear) {
                 currentTDElement.addClass("currentUserBooked");
                 currentTDElement.attr("id", i);
             }
