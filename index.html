@@ -16,18 +16,20 @@
         <div id="red">Bokade av andra</div>
         <div id="blue">De du vill boka</div>
     </div>
-    <form onsubmit="createAccount()">
-        <input type="email" placeholder="E-mail" id="email" name="email">
-        <input type="password" placeholder="Password" id="password" name="password">
-        <input type="submit" value="Skapa konto" id="createAccountBtn">
-    </form>
-    <br id="topBr">
+    <div id="accountDiv">
+        <form onsubmit="createAccount()">
+            <input type="email" placeholder="E-mail" id="email" name="email">
+            <input type="password" placeholder="Password" id="password" name="password">
+            <input type="submit" value="Skapa konto" id="createAccountBtn">
+        </form>
+        <br id="topBr">
 
-    <form onsubmit="login()">
-        <input type="email" placeholder="E-mail" id="emailLogin" name="emailLogin">
-        <input type="password" placeholder="Password" id="passwordLogin" name="passwordLogin">
-        <input type="submit" value="Logga in" id="loginBtn">
-    </form>
+        <form onsubmit="login()">
+            <input type="email" placeholder="E-mail" id="emailLogin" name="emailLogin">
+            <input type="password" placeholder="Password" id="passwordLogin" name="passwordLogin">
+            <input type="submit" value="Logga in" id="loginBtn">
+        </form>
+    </div>
     <br id="logOutBr">
     <button onclick="logOut()" id="logOutBtn">Logga ut</button>
     <br>
@@ -121,8 +123,9 @@
                 <td>16:00</td>
             </tr>
         </table>
-        <button onclick="previousWeek()"><<</button> 
-        <button onclick="commitBookings()">Boka markerade tider</button>
+        <button onclick="previousWeek()">
+            <<</button> <button onclick="commitBookings()">Boka markerade tider
+        </button>
         <button onclick="nextWeek()">>></button>
     </div>
 

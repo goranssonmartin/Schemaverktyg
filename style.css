@@ -41,6 +41,11 @@ th p{
     display:inline;
 }
 
+input,button{
+    font-family:"Comic Sans Ms";
+    font-weight: 600;
+}
+
 
 
 #modal {

@@ -28,8 +28,6 @@ $(document).ready(function () {
         }
 
         else {
-            console.log($("th").eq(col + 1).text());
-            console.log($(this).text());
             if (sessionStorage.getItem("loggedIn") !== null && unableToBookInThePast($("th").eq(col + 1).text(), $(this).text()) === true) {
                 if (bookTime($(this).text(), $("th").eq(col + 1).text()) === true) {
                     $(this).toggleClass("tempSelected");
@@ -50,14 +48,7 @@ $(document).ready(function () {
         $("#loginStatus").text("Inloggad som: " + currentUser);
         $("#numberOfBookings").css("display", "inline");
         $("#numberOfBookings").text("Antal bokningar: " + checkTotalBookingsForUser(currentUser) + " av 5");
-        $("#email").css("display", "none");
-        $("#password").css("display", "none");
-        $("#createAccountBtn").css("display", "none");
-        $("#emailLogin").css("display", "none");
-        $("#passwordLogin").css("display", "none");
-        $("#loginBtn").css("display", "none");
-        $("#topBr").css("display", "none");
-        $("#logOutBr").css("display", "none");
+        $("#accountDiv").css("display", "none");
     }
     else {
         $("#loginStatus").text("Inte inloggad");
