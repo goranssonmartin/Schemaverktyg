@@ -6,7 +6,7 @@ var tdToChange;
 $(document).ready(function () {
     var currentUser = sessionStorage.getItem("loggedIn");
     markedBooking = [];
-
+    $("#week").text(getCurrentWeek);
     $("td").click(function () {
         var col = $(this).parent().children().index($(this));
         if ($(this).attr("class") === "alreadyBooked") {
@@ -161,14 +161,13 @@ function setExpiredBookingsToTrue() {
     var currentDate = new Date();
     var currentYear = currentDate.getFullYear();
     var currentDay = currentDate.getDay();
-    var currentWeek = getCurrentWeek(currentDate, currentMonth);
+    var currentWeek = getCurrentWeek();
     var currentTime = currentDate.getHours();
     var storedDay;
     var storedYear;
     var storedWeek;
     var storedTime;
 
-    var currentMonth = currentDate.getMonth();
 
 
     allBookings.forEach(element => {
@@ -206,7 +205,9 @@ function setExpiredBookingsToTrue() {
     });
 }
 
-function getCurrentWeek(currentDate, currentMonth) {
+function getCurrentWeek() {
+    var currentDate = new Date();
+    var currentMonth = currentDate.getMonth();
     var currentWeek;
     switch (currentMonth) {
 
@@ -247,6 +248,7 @@ function getCurrentWeek(currentDate, currentMonth) {
             currentWeek = (currentDate.getDate() + 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + 30) / 7;
             break;
     }
+    
     return Math.ceil(currentWeek);
 }
 
@@ -254,8 +256,7 @@ function unableToBookInThePast(thisDay, thisTime) {
     var currentDate = new Date();
     var currentYear = currentDate.getFullYear();
     var currentDay = currentDate.getDay();
-    var currentMonth = currentDate.getMonth();
-    var currentWeek = getCurrentWeek(currentDate, currentMonth);
+    var currentWeek = getCurrentWeek();
     var currentTime = currentDate.getHours();
     
     var thisWeek = $("#week").text();
